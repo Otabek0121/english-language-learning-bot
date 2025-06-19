@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: app-english-language-learning
+  datasource:
+    url: jdbc:postgresql://localhost:5432/language_learning
+    username: postgres
+    password: 20030121
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  data:
+    redis:
+      timeout: 60000ms
+      host: localhost
+      port: 6379
