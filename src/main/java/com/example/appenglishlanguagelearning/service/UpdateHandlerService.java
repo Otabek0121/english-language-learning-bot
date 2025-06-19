@@ -62,8 +62,6 @@ public class UpdateHandlerService {
 
             userSessionRepository.save(userSession);
 
-            // TODO send contact button
-
             ReplyKeyboardMarkup contactButton = buttonCreatorService.sendPhoneNumberButtonCreate();
             botSender.sendButton(chatId, contactButton);
 
