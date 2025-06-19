@@ -5,20 +5,25 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
 @Slf4j
 @Configuration
+
 public class BotSender extends TelegramLongPollingBot {
 
 
-    @Autowired
     private  UpdateHandlerService updateHandlerService;
 
+    public BotSender(@Lazy UpdateHandlerService updateHandlerService) {
+        this.updateHandlerService = updateHandlerService;
+    }
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -30,6 +35,20 @@ public class BotSender extends TelegramLongPollingBot {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
                 .text(text)
+                .build();
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendButton(Long chatId, ReplyKeyboardMarkup replyKeyboardMarkup) {
+        SendMessage message = SendMessage.builder()
+                .chatId(chatId)
+                .text("Botimizga xush kelibsiz!")
+                .replyMarkup(replyKeyboardMarkup)
                 .build();
 
         try {

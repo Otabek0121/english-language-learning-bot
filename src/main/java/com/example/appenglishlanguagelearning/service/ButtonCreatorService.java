@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class ButtonCreatorService {
 
-    private ReplyKeyboardMarkup sendPhoneNumberButtonCreate() {
+    public ReplyKeyboardMarkup sendPhoneNumberButtonCreate() {
 
         KeyboardButton phoneNumber = new KeyboardButton("📞Telefon nomerni jo'natish");
         phoneNumber.setRequestContact(true);

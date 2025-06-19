@@ -14,6 +14,7 @@ import lombok.Setter;
 @Entity
 @Table(name="user_session")
 public class UserSession {
+
     @Id
     @Column(name = "chat_id")
     private Long chatId;
