@@ -4,7 +4,6 @@ import com.example.appenglishlanguagelearning.BotSender;
 import com.example.appenglishlanguagelearning.entity.User;
 import com.example.appenglishlanguagelearning.entity.UserSession;
 import com.example.appenglishlanguagelearning.enums.UserState;
-import com.example.appenglishlanguagelearning.payload.UserSessionDTO;
 import com.example.appenglishlanguagelearning.repository.UserRepository;
 import com.example.appenglishlanguagelearning.repository.UserSessionRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +36,8 @@ public class UpdateHandlerService {
             String text = update.getMessage().getText();
 
             if (text.equalsIgnoreCase("/start")) {
-
                 checkUserAndSave(update, chatId);
-
             }
-
         }
 
 
