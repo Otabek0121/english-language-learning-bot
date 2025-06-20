@@ -32,7 +32,11 @@ public class SessionService {
         if (entity != null) {
             session = new UserSessionDTO(entity.getChatId(), entity.getUserState());
         } else {
-            session = new UserSessionDTO(chatId, UserState.START);
+
+            UserSession sessionEntity=new UserSession(chatId,UserState.SEND_PHONE_NUMBER);
+            sessionRepository.save(sessionEntity);
+
+            session = new UserSessionDTO(chatId, UserState.SEND_PHONE_NUMBER);
         }
 
         ops.set(key, session, TTL_MINUTES, TimeUnit.MINUTES);
@@ -60,7 +64,7 @@ public class SessionService {
 
     private void saveOrUpdateSessionInDb(Long chatId, UserState state) {
         UserSession entity = sessionRepository.findByChatId(chatId)
-                .orElse(new UserSession(chatId, null));
+                .orElse(new UserSession(chatId, state));
         entity.setUserState(state);
         sessionRepository.save(entity);
     }

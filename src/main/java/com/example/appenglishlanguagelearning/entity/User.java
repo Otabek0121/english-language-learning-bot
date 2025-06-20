@@ -40,11 +40,11 @@ public class User {
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
-    private Timestamp createdAt;//OBJECT YANGI OCHIGANDA ISHLATILADI
+    private Timestamp createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    private Timestamp updatedAt;//OBJECT O'ZGARGANDA ISHLAYDI
+    private Timestamp updatedAt;
 
     private Boolean deleted = false;
 
