@@ -12,7 +12,7 @@ public interface ButtonMessage {
 
     // Dictionary menu uchun
 
-    String DICTIONARY_LEARNING_MY_WORDS="\uD83E\uDDE0 Lug‘atimdan so‘z yodlaymiz";
+    String DICTIONARY_LEARNING_MY_WORDS="\uD83E\uDDE0 Lug‘atimdan so‘z yodlash";
     String DICTIONARY_LEARNING_PUBLIC_WORDS="\uD83C\uDFB2 Umumiy lug‘atdan yodlash";
     String DICTIONARY_MY_WORDS="📒 Mening lug‘atim";
     String DICTIONARY_PUBLIC_WORDS="🌐 Umumiy lug‘at";

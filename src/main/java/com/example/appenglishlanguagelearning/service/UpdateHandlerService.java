@@ -101,6 +101,9 @@ public class UpdateHandlerService {
                     sendMenu(chatId, buttonCreatorService.mainMenuButtonCreate(), MessageConstants.MAIN_MENU_TEXT);
 
                 }
+                else if (text.equalsIgnoreCase(ButtonMessage.DICTIONARY_ADD_WORD)) {
+
+                }
 
             }
 
