@@ -22,7 +22,10 @@ public class TextToSpeechConverter {
         if (audioFilePath != null) {
             botSender.sendAudio(chatId, audioFilePath);
         } else {
-            botSender.sendText(chatId, "Ovoz yaratishda xatolik yuz berdi.");
+            String text= """
+                    Ovoz yaratishda xatolik yuz berdi 🧐
+                    """;
+            botSender.sendText(chatId, text);
         }
     }
 

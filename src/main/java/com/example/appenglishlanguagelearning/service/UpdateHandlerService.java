@@ -48,6 +48,7 @@ public class UpdateHandlerService {
                 switch (state){
 
                     case MAIN_MENU -> handleMainMenu(update, chatId);
+                    case DICTIONARY_MENU -> handleDictionaryMenu(update, chatId);
 //                    case WORD_LEARNING -> handleWordLearning(update, chatId);
 //                    case WORD_LEARNING_TEST -> handleWordLearningTest(update, chatId);
 //
@@ -79,9 +80,20 @@ public class UpdateHandlerService {
             else if (update.getMessage().hasContact()) {
                 updateUserPhoneNumber(update, chatId);
                 sessionService.updateSession(chatId, UserState.MAIN_MENU,false);
-                sendMainMenu(chatId);
+
+                String text="""
+                \uD83D\uDCCC Asosiy bo‘lim.
+                ⬇ Quyidagilardan birini tanlang:
+                """;
+                sendMenu(chatId,buttonCreatorService.mainMenuButtonCreate(),text);
             }
         }
+
+
+    }
+
+    private void handleDictionaryMenu(Update update, Long chatId) {
+
 
 
     }
@@ -96,9 +108,9 @@ public class UpdateHandlerService {
                 String text = update.getMessage().getText();
 
                 if (text.equalsIgnoreCase(MessageConstants.MAIN_MENU_DICTIONARY)) {
-                    botSender.deleteButtons(chatId,"Lug'at bo'limiga xush kelibsiz!");
-                    botSender.sendButton(chatId,"Quyidagi bo'limlardan birini tanlang:",buttonCreatorService.dictionaryButtonCreate());
-
+                    botSender.deleteButtons(chatId,"✨Lug'at bo'limiga xush kelibsiz!");
+                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU,false);
+                    sendMenu(chatId,buttonCreatorService.dictionaryButtonCreate(),"\uD83D\uDCCC Quyidagi bo'limlardan birini tanlang:");
                 }
                 else if (text.equalsIgnoreCase(MessageConstants.MAIN_MENU_STATISTICS)) {
                     botSender.deleteButtons(chatId,"Statistika bo'limiga xush kelibsiz!");
@@ -119,13 +131,8 @@ public class UpdateHandlerService {
     }
 
 
-    private void sendMainMenu(Long chatId) {
-        ReplyKeyboardMarkup mainMenuButton = buttonCreatorService.mainMenuButtonCreate();
-        String text= """
-                \uD83D\uDCCC Asosiy bo‘lim.
-                Quyidagilardan birini tanlang:
-                """;
-        botSender.sendButton(chatId,text, mainMenuButton);
+    private void sendMenu(Long chatId,ReplyKeyboardMarkup replyKeyboardMarkup, String text) {
+        botSender.sendButton(chatId,text, replyKeyboardMarkup);
     }
 
     private void updateUserPhoneNumber(Update update, Long chatId) {

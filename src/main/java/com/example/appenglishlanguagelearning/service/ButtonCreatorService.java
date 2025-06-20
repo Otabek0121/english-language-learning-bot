@@ -65,19 +65,20 @@ public class ButtonCreatorService {
         List<KeyboardRow> rows = new ArrayList<>();
 
         KeyboardRow row1 = new KeyboardRow();
-        row1.add("\uD83E\uDDE0 Lug'atimdan so'z yodlaymiz");
-        row1.add("\uD83C\uDFB2 Umumiy lug'atdan so'z yodlaymiz");
+        row1.add(MessageConstants.DICTIONARY_LEARNING_MY_WORDS);
+        row1.add(MessageConstants.DICTIONARY_LEARNING_PUBLIC_WORDS);
 
 
         KeyboardRow row2 = new KeyboardRow();
-        row2.add("📒 Mening lug‘atim");
-        row2.add("🌐 Umumiy lug‘at");
+        row2.add(MessageConstants.DICTIONARY_MY_WORDS);
+        row2.add(MessageConstants.DICTIONARY_PUBLIC_WORDS);
 
         KeyboardRow row3 = new KeyboardRow();
-        row3.add("✍️ Lug‘atimga so‘z qo‘shish");
+        row3.add(MessageConstants.DICTIONARY_ADD_WORD);
+        row3.add(MessageConstants.DICTIONARY_SEARCH_WORD);
 
         KeyboardRow row4 = new KeyboardRow();
-        row4.add("🔙 Orqaga");
+        row4.add(MessageConstants.MENU_BACK);
 
         rows.add(row1);
         rows.add(row2);
@@ -131,7 +132,6 @@ public class ButtonCreatorService {
         keyboard.setKeyboard(buttons);
         return keyboard;
     }
-
 
     public InlineKeyboardMarkup anotherUnitButtonCreate(){
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
