@@ -1,5 +1,6 @@
 package com.example.appenglishlanguagelearning.config;
 
+import com.example.appenglishlanguagelearning.payload.AddWordSessionDTO;
 import com.example.appenglishlanguagelearning.payload.UserSessionDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,15 @@ public class RedisConfig {
         template.setConnectionFactory(factory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new Jackson2JsonRedisSerializer<>(UserSessionDTO.class));
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, AddWordSessionDTO> addWordSessionRedisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate<String, AddWordSessionDTO> template = new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new Jackson2JsonRedisSerializer<>(AddWordSessionDTO.class));
         return template;
     }
 

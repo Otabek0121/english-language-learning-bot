@@ -18,7 +18,6 @@ import java.util.UUID;
 @SQLRestriction("deleted = false")
 public class Dictionary {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
