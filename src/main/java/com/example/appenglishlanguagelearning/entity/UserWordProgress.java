@@ -1,5 +1,6 @@
 package com.example.appenglishlanguagelearning.entity;
 
+import com.example.appenglishlanguagelearning.enums.DictionaryStatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -18,25 +20,23 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
-@SQLDelete(sql = "UPDATE users SET deleted=true WHERE id=?")
+@Table(name = "user_word_progress")
+@SQLDelete(sql = "UPDATE user_session SET deleted=true WHERE id=?")
 @Where(clause = "deleted=false")
-public class User {
+public class UserWordProgress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    private Long chatId;
+    private UUID userId;
+    private UUID wordId;
 
-    private String firstName;
+    private int knowCount;
+    private LocalDateTime lastSeen;
 
-    private String lastName;
-
-    private String username;
-
-    private String phoneNumber;
+    @Enumerated(EnumType.STRING)
+    private DictionaryStatusEnum status;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")

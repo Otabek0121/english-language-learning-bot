@@ -2,7 +2,12 @@ package com.example.appenglishlanguagelearning.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -11,6 +16,8 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "dictionary")
+@SQLDelete(sql = "UPDATE dictionary SET deleted=true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Dictionary {
 
 
@@ -30,4 +37,13 @@ public class Dictionary {
     @ToString.Exclude
     private User user;
 
+    @CreationTimestamp
+    @Column(updatable = false, name = "created_at")
+    private Timestamp createdAt;//OBJECT YANGI OCHIGANDA ISHLATILADI
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;//OBJECT O'ZGARGANDA ISHLAYDI
+
+    private Boolean deleted = false;
 }
