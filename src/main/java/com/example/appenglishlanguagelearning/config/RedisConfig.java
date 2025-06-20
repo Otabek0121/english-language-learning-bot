@@ -22,12 +22,12 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean
-    public RedisMessageListenerContainer keyExpirationListener(RedisConnectionFactory factory, SessionExpirationListener listener) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(factory);
-        container.addMessageListener(listener, new PatternTopic("__keyevent@0__:expired"));
-        return container;
-    }
+//    @Bean
+//    public RedisMessageListenerContainer keyExpirationListener(RedisConnectionFactory factory, SessionExpirationListener listener) {
+//        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+//        container.setConnectionFactory(factory);
+//        container.addMessageListener(listener, new PatternTopic("__keyevent@0__:expired"));
+//        return container;
+//    }
 
 }

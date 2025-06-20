@@ -2,14 +2,12 @@ package com.example.appenglishlanguagelearning.entity;
 
 import com.example.appenglishlanguagelearning.enums.UserState;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 
 import java.sql.Timestamp;
 
@@ -20,7 +18,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="user_session")
 @SQLDelete(sql = "UPDATE user_session SET deleted=true WHERE id=?")
-@Where(clause = "deleted=false")
+@SQLRestriction("deleted = false")
 public class UserSession {
 
     @Id

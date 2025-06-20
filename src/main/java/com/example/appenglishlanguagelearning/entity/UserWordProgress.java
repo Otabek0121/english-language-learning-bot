@@ -2,14 +2,12 @@ package com.example.appenglishlanguagelearning.entity;
 
 import com.example.appenglishlanguagelearning.enums.DictionaryStatusEnum;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -22,7 +20,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "user_word_progress")
 @SQLDelete(sql = "UPDATE user_session SET deleted=true WHERE id=?")
-@Where(clause = "deleted=false")
+@SQLRestriction("deleted = false")
 public class UserWordProgress {
 
     @Id

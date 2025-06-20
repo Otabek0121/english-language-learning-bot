@@ -1,5 +1,6 @@
 package com.example.appenglishlanguagelearning.service;
 
+import com.example.appenglishlanguagelearning.utils.ButtonMessage;
 import com.example.appenglishlanguagelearning.utils.MessageConstants;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -17,7 +18,7 @@ public class ButtonCreatorService {
 
     public ReplyKeyboardMarkup sendPhoneNumberButtonCreate() {
 
-        KeyboardButton phoneNumber = new KeyboardButton("📞Telefon nomerni jo'natish");
+        KeyboardButton phoneNumber = new KeyboardButton(ButtonMessage.SEND_PHONE_NUMBER);
         phoneNumber.setRequestContact(true);
 
         KeyboardRow buttons = new KeyboardRow();
@@ -34,11 +35,11 @@ public class ButtonCreatorService {
 
     public ReplyKeyboardMarkup mainMenuButtonCreate() {
 
-        KeyboardButton dictionary = new KeyboardButton(MessageConstants.MAIN_MENU_DICTIONARY);
-        KeyboardButton statistics = new KeyboardButton(MessageConstants.MAIN_MENU_STATISTICS);
-        KeyboardButton settings = new KeyboardButton(MessageConstants.MAIN_MENU_SETTINGS);
-        KeyboardButton support = new KeyboardButton(MessageConstants.MAIN_MENU_SUPPORT);
-        KeyboardButton aboutMe = new KeyboardButton(MessageConstants.MAIN_MENU_ABOUT_ME);
+        KeyboardButton dictionary = new KeyboardButton(ButtonMessage.MAIN_MENU_DICTIONARY);
+        KeyboardButton statistics = new KeyboardButton(ButtonMessage.MAIN_MENU_STATISTICS);
+        KeyboardButton settings = new KeyboardButton(ButtonMessage.MAIN_MENU_SETTINGS);
+        KeyboardButton support = new KeyboardButton(ButtonMessage.MAIN_MENU_SUPPORT);
+        KeyboardButton aboutMe = new KeyboardButton(ButtonMessage.MAIN_MENU_ABOUT_ME);
 
         KeyboardRow row1 = new KeyboardRow();
         row1.add(dictionary);
@@ -65,20 +66,20 @@ public class ButtonCreatorService {
         List<KeyboardRow> rows = new ArrayList<>();
 
         KeyboardRow row1 = new KeyboardRow();
-        row1.add(MessageConstants.DICTIONARY_LEARNING_MY_WORDS);
-        row1.add(MessageConstants.DICTIONARY_LEARNING_PUBLIC_WORDS);
+        row1.add(ButtonMessage.DICTIONARY_LEARNING_MY_WORDS);
+        row1.add(ButtonMessage.DICTIONARY_LEARNING_PUBLIC_WORDS);
 
 
         KeyboardRow row2 = new KeyboardRow();
-        row2.add(MessageConstants.DICTIONARY_MY_WORDS);
-        row2.add(MessageConstants.DICTIONARY_PUBLIC_WORDS);
+        row2.add(ButtonMessage.DICTIONARY_MY_WORDS);
+        row2.add(ButtonMessage.DICTIONARY_PUBLIC_WORDS);
 
         KeyboardRow row3 = new KeyboardRow();
-        row3.add(MessageConstants.DICTIONARY_ADD_WORD);
-        row3.add(MessageConstants.DICTIONARY_SEARCH_WORD);
+        row3.add(ButtonMessage.DICTIONARY_ADD_WORD);
+        row3.add(ButtonMessage.DICTIONARY_SEARCH_WORD);
 
         KeyboardRow row4 = new KeyboardRow();
-        row4.add(MessageConstants.MENU_BACK);
+        row4.add(ButtonMessage.MENU_BACK);
 
         rows.add(row1);
         rows.add(row2);

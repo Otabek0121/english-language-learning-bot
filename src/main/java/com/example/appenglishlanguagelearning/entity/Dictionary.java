@@ -1,11 +1,9 @@
 package com.example.appenglishlanguagelearning.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -17,7 +15,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "dictionary")
 @SQLDelete(sql = "UPDATE dictionary SET deleted=true WHERE id=?")
-@Where(clause = "deleted=false")
+@SQLRestriction("deleted = false")
 public class Dictionary {
 
 

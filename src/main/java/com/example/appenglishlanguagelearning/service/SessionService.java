@@ -19,7 +19,7 @@ public class SessionService {
 
     private final UserSessionRepository sessionRepository;
 
-    private static final long TTL_MINUTES = 10  ;
+    private static final long TTL_MINUTES = 2  ;
 
     public UserSessionDTO getSession(Long chatId) {
         String key = chatId.toString();
@@ -49,17 +49,8 @@ public class SessionService {
 
         redisTemplate.opsForValue().set(key, session, TTL_MINUTES, TimeUnit.MINUTES);
 
-        if (saveToDb) {
-            saveOrUpdateSessionInDb(chatId, state);
-        }
-    }
+        saveOrUpdateSessionInDb(chatId, state);
 
-    public void saveSessionFromRedis(Long chatId) {
-        String key = chatId.toString();
-        UserSessionDTO session = redisTemplate.opsForValue().get(key);
-        if (session != null) {
-            saveOrUpdateSessionInDb(session.getChatId(), session.getUserState());
-        }
     }
 
     private void saveOrUpdateSessionInDb(Long chatId, UserState state) {
