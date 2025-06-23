@@ -1,9 +1,12 @@
 package com.example.appenglishlanguagelearning.service;
 
 import com.example.appenglishlanguagelearning.BotSender;
+import com.example.appenglishlanguagelearning.entity.Dictionary;
 import com.example.appenglishlanguagelearning.entity.User;
 import com.example.appenglishlanguagelearning.enums.UserState;
+import com.example.appenglishlanguagelearning.payload.AddWordSessionDTO;
 import com.example.appenglishlanguagelearning.payload.UserSessionDTO;
+import com.example.appenglishlanguagelearning.repository.DictionaryRepository;
 import com.example.appenglishlanguagelearning.repository.UserRepository;
 import com.example.appenglishlanguagelearning.repository.UserSessionRepository;
 import com.example.appenglishlanguagelearning.utils.ButtonMessage;
@@ -14,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -30,6 +34,8 @@ public class UpdateHandlerService {
     private final UserSessionRepository userSessionRepository;
 
     private final ButtonCreatorService buttonCreatorService;
+
+    private final DictionaryRepository dictionaryRepository;
 
     private final BotSender botSender;
 
@@ -52,11 +58,11 @@ public class UpdateHandlerService {
                     case MAIN_MENU -> handleMainMenu(update, chatId);
                     case DICTIONARY_MENU -> handleDictionaryMenu(update, chatId);
 
-//                    case ADD_WORD_WAIT_WORD -> handleAddWord(update, chatId);
-//                    case ADD_WORD_WAIT_TRANSLATION -> handleAddTranslation(update, chatId);
-//                    case ADD_WORD_WAIT_DESCRIPTION -> handleAddDescription(update, chatId);
+                    case ADD_WORD_WAIT_WORD -> handleAddWord(update, chatId);
+                    case ADD_WORD_WAIT_TRANSLATION -> handleAddTranslation(update, chatId);
+//                    case ADD_WORD_WAIT_DESCRIPTION -> handleAddDescription(update, chatId); TODO NOTE: voz kechilishi mumkin
 //
-//                    case MY_DICTIONARY_LIST -> handleMyDictionary(update, chatId);
+                    case MY_DICTIONARY_LIST -> handleMyDictionary(update, chatId);
 //                    case PUBLIC_DICTIONARY_LIST -> handlePublicDictionary(update, chatId);
 //
 //                    case MY_DICTIONARY_TEST -> handleMyDictionaryTest(update, chatId);
@@ -80,12 +86,131 @@ public class UpdateHandlerService {
 
             } else if (update.getMessage().hasContact()) {
                 updateUserPhoneNumber(update, chatId);
-                sessionService.updateSession(chatId, UserState.MAIN_MENU, false);
+                sessionService.updateSession(chatId, UserState.MAIN_MENU);
 
                 sendMenu(chatId, buttonCreatorService.mainMenuButtonCreate(), MessageConstants.MAIN_MENU_TEXT);
             }
         }
 
+
+    }
+
+    private void handleMyDictionary(Update update, Long chatId) {
+
+        if (update.hasMessage()) {
+            if (update.getMessage().hasText()) {
+                String wordTranslate = update.getMessage().getText();
+
+                if (wordTranslate.equalsIgnoreCase(ButtonMessage.MENU_BACK)) {
+                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
+                    sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_MESSAGE);
+                    return;
+                }
+                StringBuilder myWords=new StringBuilder();
+
+                List<Dictionary> words = dictionaryRepository.findAllByUser_ChatId(chatId);
+
+                if (words.isEmpty()) {
+                    // TODO empty bo'lsa unga so'z qo'shishi kerakligi haqida message yuborish
+                }
+                // TODO bo'sh bo'lmasa so'zlarrni hammasini userga ko'rsatish quyidagi ko'rinishda   hello <-> salom kabi
+
+            }
+        }
+
+
+
+    }
+
+//    private void handleAddDescription(Update update, Long chatId) {
+//
+//        if (update.hasMessage()) {
+//            if (update.getMessage().hasText()) {
+//                String text = update.getMessage().getText();
+//
+//                if (text.equalsIgnoreCase(ButtonMessage.MENU_BACK)) {
+//                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
+//                    sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_MESSAGE);
+//                    return;
+//                }
+//                AddWordSessionDTO wordSession = addWordSessionService.getSession(chatId);
+//                if (Objects.isNull(wordSession)) {
+//                    sessionService.updateSession(chatId, UserState.ADD_WORD_WAIT_TRANSLATION);
+//                    sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.ENTER_WORD_TRANSLATION);
+//                    return;
+//                }
+//
+//                wordSession.setDescription(text);
+//                addWordSessionService.saveSession(wordSession);
+//
+//                sessionService.updateSession(chatId, UserState.ADD_WORD_WAIT_DESCRIPTION);
+//                sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.ENTER_WORD_TRANSLATION);
+//                return;
+//            }
+//        }
+//
+//        // TODO bu yerda xatolik haqida xabar berish textmas boshqa narsa yuborilsa userga xatolik haqida xabar berish
+//
+//    }
+
+    private void handleAddTranslation(Update update, Long chatId) {
+
+        if (update.hasMessage()) {
+            if (update.getMessage().hasText()) {
+                String wordTranslate = update.getMessage().getText();
+
+                if (wordTranslate.equalsIgnoreCase(ButtonMessage.MENU_BACK)) {
+                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
+                    sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_MESSAGE);
+                    return;
+                }
+                AddWordSessionDTO wordSession = addWordSessionService.getSession(chatId);
+                if (Objects.isNull(wordSession)) {
+                    sessionService.updateSession(chatId, UserState.ADD_WORD_WAIT_WORD);
+                    sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.ENTER_WORD);
+                    return;
+                }
+
+                wordSession.setDescription(wordTranslate);
+                Dictionary dictionary = new Dictionary();
+                dictionary.setTranslateWord(wordTranslate);
+                dictionary.setWord(wordSession.getWord());
+                dictionary.setUser(userRepository.findByChatId(chatId).get());
+                dictionaryRepository.save(dictionary);
+                addWordSessionService.clearSession(chatId);
+
+                sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
+                sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.WORD_CREATE);
+                return;
+            }
+        }
+
+        // TODO bu yerda xatolik haqida xabar berish textmas boshqa narsa yuborilsa userga xatolik haqida xabar berish
+
+    }
+
+    private void handleAddWord(Update update, Long chatId) {
+
+        if (update.hasMessage()) {
+            if (update.getMessage().hasText()) {
+                String text = update.getMessage().getText();
+
+                if (text.equalsIgnoreCase(ButtonMessage.MENU_BACK)) {
+                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
+                    sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_MESSAGE);
+                } else {
+                    AddWordSessionDTO addWordSessionDTO = new AddWordSessionDTO();
+                    addWordSessionDTO.setWord(text);
+                    addWordSessionDTO.setChatId(chatId);
+                    addWordSessionService.saveSession(addWordSessionDTO);
+                    /// sessionga saqlandi endi stateni o'zgaartirmiz
+
+                    sessionService.updateSession(chatId, UserState.ADD_WORD_WAIT_TRANSLATION);
+                    sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.ENTER_WORD_TRANSLATION);
+                }
+
+            }
+        }
 
     }
 
@@ -95,17 +220,25 @@ public class UpdateHandlerService {
             if (update.getMessage().hasText()) {
                 String text = update.getMessage().getText();
 
-                if(text.equalsIgnoreCase(ButtonMessage.DICTIONARY_LEARNING_MY_WORDS)){
+                if (text.equalsIgnoreCase(ButtonMessage.DICTIONARY_LEARNING_MY_WORDS)) {
 
                 }
                 else if (text.equalsIgnoreCase(ButtonMessage.MENU_BACK)) {
-                    sessionService.updateSession(chatId, UserState.MAIN_MENU, false);
-                    sendMenu(chatId, buttonCreatorService.mainMenuButtonCreate(), MessageConstants.MAIN_MENU_TEXT);
+                    sessionService.updateSession(chatId, UserState.MAIN_MENU);
+                    sendMenu(chatId, buttonCreatorService.mainMenuButtonCreate(), MessageConstants.ENTER_WORD);
 
                 }
                 else if (text.equalsIgnoreCase(ButtonMessage.DICTIONARY_ADD_WORD)) {
-
+                    sessionService.updateSession(chatId, UserState.ADD_WORD_WAIT_WORD);
+                    sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.ENTER_WORD);
                 }
+                else if(text.equalsIgnoreCase(ButtonMessage.DICTIONARY_MY_WORDS)){
+                    sessionService.updateSession(chatId, UserState.MY_DICTIONARY_LIST);
+                    sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.ENTER_WORD);
+                }
+
+
+                // TODO dictionry ning qolgan qismini yozish else if bilan
 
             }
 
@@ -113,6 +246,7 @@ public class UpdateHandlerService {
 
 
     }
+
 
     // Todo main menu handleni tugatish
     private void handleMainMenu(Update update, Long chatId) {
@@ -124,11 +258,10 @@ public class UpdateHandlerService {
 
                 if (text.equalsIgnoreCase(ButtonMessage.MAIN_MENU_DICTIONARY)) {
                     botSender.deleteButtons(chatId, "✨Lug'at bo'limiga xush kelibsiz!");
-                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU, false);
+                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
                     sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_MESSAGE);
 
-                }
-                else if (text.equalsIgnoreCase(ButtonMessage.MAIN_MENU_STATISTICS)) {
+                } else if (text.equalsIgnoreCase(ButtonMessage.MAIN_MENU_STATISTICS)) {
                     botSender.deleteButtons(chatId, "Statistika bo'limiga xush kelibsiz!");
                     // TODO -> statistika bo'limini qilish (lug'atlari soni,
                     //  testlardagi muvoffaqiyati(buni o'ylab ko'rish kerak),
@@ -137,18 +270,15 @@ public class UpdateHandlerService {
                     //  (keyinchalik pullik bo'lsa medallarga qarab bazi pullik funksionalliklarni ochib berissh uchun 😁TIRIKCHILIK)
                     //  nechta so'z o'rganilganlar qatorida eknligi)
 
-                }
-                else if (text.equalsIgnoreCase(ButtonMessage.MAIN_MENU_SETTINGS)) {
+                } else if (text.equalsIgnoreCase(ButtonMessage.MAIN_MENU_SETTINGS)) {
                     botSender.deleteButtons(chatId, "Sozlamalar bo'limiga xush kelibsiz!");
                     // TODO -> settings bo'limini qilish (kelajakda botni multilanguage qilish uchun)
 
-                }
-                else if (text.equalsIgnoreCase(ButtonMessage.MAIN_MENU_SUPPORT)) {
+                } else if (text.equalsIgnoreCase(ButtonMessage.MAIN_MENU_SUPPORT)) {
                     botSender.deleteButtons(chatId, "Yordam bo'limiga xush kelibsiz!");
 
                     // TODO -> support bo'limini qilish(Foydalnauvchilarning fikr mulohazalari bilan ishlash uchun)
-                }
-                else {
+                } else {
                     botSender.sendText(chatId, "\uD83D\uDCCC Sizga ko'rsatilgan buttonlardan birini tanlang.");
                 }
 

@@ -10,4 +10,12 @@ public interface MessageConstants {
 
     String DICTIONARY_MESSAGE="\uD83D\uDCCC Quyidagi bo'limlardan birini tanlang.";
 
+    String ENTER_WORD="So'zni kiriting 👉";
+
+    String ENTER_WORD_TRANSLATION="So'zni tajimasini kiriting 👉";
+
+    String ENTER_WORD_DESCRIPTION="So'zni qo'llanish o'rnini kiriting 👉";
+
+    String WORD_CREATE="So'z muvffaqiyatli saqlandi 🎉";
+
 }

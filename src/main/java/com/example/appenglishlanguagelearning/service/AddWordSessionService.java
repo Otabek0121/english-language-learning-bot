@@ -14,7 +14,7 @@ public class AddWordSessionService {
 
     @Qualifier(value = "wordSession")
     private final RedisTemplate<String, AddWordSessionDTO> redisTemplate;
-    private static final long TTL_MINUTES = 10;
+    private static final long TTL_MINUTES = 2;
 
     public AddWordSessionDTO getSession(Long chatId) {
         String key = getKey(chatId);

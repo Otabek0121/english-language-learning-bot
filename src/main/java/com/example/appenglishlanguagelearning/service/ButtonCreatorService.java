@@ -91,6 +91,18 @@ public class ButtonCreatorService {
         return markup;
     }
 
+
+    public ReplyKeyboardMarkup backMenuButtonCreate() {
+        ReplyKeyboardMarkup markup = new ReplyKeyboardMarkup();
+        List<KeyboardRow> rows = new ArrayList<>();
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add(ButtonMessage.MENU_BACK);
+        rows.add(row1);
+        markup.setKeyboard(rows);
+        markup.setResizeKeyboard(true);
+        return markup;
+    }
+
     public InlineKeyboardMarkup unitButtonCreate() {
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();

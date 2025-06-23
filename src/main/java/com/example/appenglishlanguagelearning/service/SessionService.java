@@ -45,7 +45,7 @@ public class SessionService {
         return session;
     }
 
-    public void updateSession(Long chatId, UserState state, boolean saveToDb) {
+    public void updateSession(Long chatId, UserState state) {
         String key = chatId.toString();
         UserSessionDTO session = new UserSessionDTO(chatId, state);
 
