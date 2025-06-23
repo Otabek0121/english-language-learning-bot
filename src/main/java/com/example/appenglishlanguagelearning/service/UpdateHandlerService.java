@@ -146,7 +146,7 @@ public class UpdateHandlerService {
                 else if (text.equalsIgnoreCase(ButtonMessage.MAIN_MENU_SUPPORT)) {
                     botSender.deleteButtons(chatId, "Yordam bo'limiga xush kelibsiz!");
 
-                    // TODO -> support bo'limini qilish(Foydalnauvchilarning fikr muloohzalari bilan ishlash uchun)
+                    // TODO -> support bo'limini qilish(Foydalnauvchilarning fikr mulohazalari bilan ishlash uchun)
                 }
                 else {
                     botSender.sendText(chatId, "\uD83D\uDCCC Sizga ko'rsatilgan buttonlardan birini tanlang.");
