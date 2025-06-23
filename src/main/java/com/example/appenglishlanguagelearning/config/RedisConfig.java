@@ -12,7 +12,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
-    @Bean
+    @Bean(name="userSession")
     public RedisTemplate<String, UserSessionDTO> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, UserSessionDTO> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
@@ -21,7 +21,7 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean
+    @Bean(name="wordSession")
     public RedisTemplate<String, AddWordSessionDTO> addWordSessionRedisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, AddWordSessionDTO> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);

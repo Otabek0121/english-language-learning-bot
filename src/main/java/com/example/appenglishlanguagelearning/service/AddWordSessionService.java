@@ -2,6 +2,7 @@ package com.example.appenglishlanguagelearning.service;
 
 import com.example.appenglishlanguagelearning.payload.AddWordSessionDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AddWordSessionService {
 
+    @Qualifier(value = "wordSession")
     private final RedisTemplate<String, AddWordSessionDTO> redisTemplate;
     private static final long TTL_MINUTES = 10;
 

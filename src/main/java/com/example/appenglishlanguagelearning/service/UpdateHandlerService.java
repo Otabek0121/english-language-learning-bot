@@ -25,6 +25,8 @@ public class UpdateHandlerService {
 
     private final SessionService sessionService;
 
+    private final AddWordSessionService addWordSessionService;
+
     private final UserSessionRepository userSessionRepository;
 
     private final ButtonCreatorService buttonCreatorService;
@@ -132,7 +134,7 @@ public class UpdateHandlerService {
                     //  testlardagi muvoffaqiyati(buni o'ylab ko'rish kerak),
                     //  eng ko'p so'z qo'shganlar reytingini qilish,
                     //  qachon botga start bosganini ko'rsatish, (bu orqali ularga medallar berish)
-                    //  (keyinchalik pullik bo'lsa medallarga qarab bazi pullik funkssionalliklarni ochib berissh uchun 😁TIRIKCHILIK)
+                    //  (keyinchalik pullik bo'lsa medallarga qarab bazi pullik funksionalliklarni ochib berissh uchun 😁TIRIKCHILIK)
                     //  nechta so'z o'rganilganlar qatorida eknligi)
 
                 }

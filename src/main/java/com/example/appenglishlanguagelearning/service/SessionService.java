@@ -5,6 +5,7 @@ import com.example.appenglishlanguagelearning.enums.UserState;
 import com.example.appenglishlanguagelearning.payload.UserSessionDTO;
 import com.example.appenglishlanguagelearning.repository.UserSessionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class SessionService {
 
+    @Qualifier(value = "userSession")
     private final RedisTemplate<String, UserSessionDTO> redisTemplate;
 
     private final UserSessionRepository sessionRepository;
