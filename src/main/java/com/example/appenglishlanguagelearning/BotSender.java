@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendAudio;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
@@ -78,6 +79,21 @@ public class BotSender extends TelegramLongPollingBot {
         }
     }
 
+
+    public void sendTextParseToHtml(Long chatId, String text) {
+        SendMessage message = SendMessage.builder()
+                .chatId(chatId)
+                .text(text)
+                .parseMode(ParseMode.HTML)
+                .build();
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendButton(Long chatId, String text ,ReplyKeyboardMarkup replyKeyboardMarkup) {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
@@ -91,6 +107,22 @@ public class BotSender extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
+
+    public void sendButtonTextParseHtml(Long chatId, String text ,ReplyKeyboardMarkup replyKeyboardMarkup) {
+        SendMessage message = SendMessage.builder()
+                .chatId(chatId)
+                .text(text)
+                .parseMode(ParseMode.HTML)
+                .replyMarkup(replyKeyboardMarkup)
+                .build();
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     public void sendAudio(long chatId, String filePath) {

@@ -21,7 +21,7 @@ public class SessionService {
 
     private final UserSessionRepository sessionRepository;
 
-    private static final long TTL_MINUTES = 2  ;
+    private static final long TTL_MINUTES = 10  ;
 
     public UserSessionDTO getSession(Long chatId) {
         String key = chatId.toString();

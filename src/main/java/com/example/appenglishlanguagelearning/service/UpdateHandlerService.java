@@ -62,7 +62,7 @@ public class UpdateHandlerService {
                     case ADD_WORD_WAIT_TRANSLATION -> handleAddTranslation(update, chatId);
 //                    case ADD_WORD_WAIT_DESCRIPTION -> handleAddDescription(update, chatId); TODO NOTE: voz kechilishi mumkin
 //
-                    case MY_DICTIONARY_LIST -> handleMyDictionary(update, chatId);
+//                    case MY_DICTIONARY_LIST -> handleMyDictionary(update, chatId);    TODO NOTE: voz kechilishi mumkin
 //                    case PUBLIC_DICTIONARY_LIST -> handlePublicDictionary(update, chatId);
 //
 //                    case MY_DICTIONARY_TEST -> handleMyDictionaryTest(update, chatId);
@@ -95,32 +95,6 @@ public class UpdateHandlerService {
 
     }
 
-    private void handleMyDictionary(Update update, Long chatId) {
-
-        if (update.hasMessage()) {
-            if (update.getMessage().hasText()) {
-                String wordTranslate = update.getMessage().getText();
-
-                if (wordTranslate.equalsIgnoreCase(ButtonMessage.MENU_BACK)) {
-                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
-                    sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_MESSAGE);
-                    return;
-                }
-                StringBuilder myWords=new StringBuilder();
-
-                List<Dictionary> words = dictionaryRepository.findAllByUser_ChatId(chatId);
-
-                if (words.isEmpty()) {
-                    // TODO empty bo'lsa unga so'z qo'shishi kerakligi haqida message yuborish
-                }
-                // TODO bo'sh bo'lmasa so'zlarrni hammasini userga ko'rsatish quyidagi ko'rinishda   hello <-> salom kabi
-
-            }
-        }
-
-
-
-    }
 
 //    private void handleAddDescription(Update update, Long chatId) {
 //
@@ -233,8 +207,25 @@ public class UpdateHandlerService {
                     sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.ENTER_WORD);
                 }
                 else if(text.equalsIgnoreCase(ButtonMessage.DICTIONARY_MY_WORDS)){
-                    sessionService.updateSession(chatId, UserState.MY_DICTIONARY_LIST);
-                    sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.ENTER_WORD);
+                    List<Dictionary> words = dictionaryRepository.findAllByUser_ChatId(chatId);
+
+                    if (words.isEmpty()) {
+                        // TODO empty bo'lsa unga so'z qo'shishi kerakligi haqida message yuborish
+                        sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
+                        sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_NOT_FOUND);
+                        return;
+                    }
+
+                    // TODO bo'sh bo'lmasa so'zlarrni hammasini userga ko'rsatish quyidagi ko'rinishda   hello <-> salom kabi
+                    StringBuilder myWords=new StringBuilder();
+                    myWords.append("<b> 🧾 WORDS - SO'ZLAR 🧾 </b> \n \n");
+
+                    for (int i = 0; i < words.size(); i++) {
+                        myWords.append("<b>").append((i+1)+".  ").append(words.get(i).getWord()).append(" ↔️ ").append(words.get(i).getTranslateWord()).append("</b>").append("\n\n");
+                    }
+
+                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
+                    sendMenuTextToParseHtml(chatId, buttonCreatorService.dictionaryButtonCreate(), myWords.toString());
                 }
 
 
@@ -290,6 +281,10 @@ public class UpdateHandlerService {
 
     private void sendMenu(Long chatId, ReplyKeyboardMarkup replyKeyboardMarkup, String text) {
         botSender.sendButton(chatId, text, replyKeyboardMarkup);
+    }
+
+    private void sendMenuTextToParseHtml(Long chatId, ReplyKeyboardMarkup replyKeyboardMarkup, String text) {
+        botSender.sendButtonTextParseHtml(chatId, text, replyKeyboardMarkup);
     }
 
     private void updateUserPhoneNumber(Update update, Long chatId) {
