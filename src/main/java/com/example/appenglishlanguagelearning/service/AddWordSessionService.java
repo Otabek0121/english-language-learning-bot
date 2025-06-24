@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AddWordSessionService {
 
-    @Qualifier(value = "wordSession")
+    @Qualifier(value = "addWordSession")
     private final RedisTemplate<String, AddWordSessionDTO> redisTemplate;
     private static final long TTL_MINUTES = 2;
 
