@@ -31,8 +31,6 @@ public class UpdateHandlerService {
 
     private final AddWordSessionService addWordSessionService;
 
-    private final UserSessionRepository userSessionRepository;
-
     private final ButtonCreatorService buttonCreatorService;
 
     private final DictionaryRepository dictionaryRepository;
