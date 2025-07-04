@@ -36,6 +36,7 @@ public class UpdateHandlerService {
     private final DictionaryRepository dictionaryRepository;
 
     private final BotSender botSender;
+    private final WordSessionService wordSessionService;
 
 
     public void handle(Update update) {
@@ -63,7 +64,7 @@ public class UpdateHandlerService {
 //                    case MY_DICTIONARY_LIST -> handleMyDictionary(update, chatId);    TODO NOTE: voz kechilishi mumkin
 //                    case PUBLIC_DICTIONARY_LIST -> handlePublicDictionary(update, chatId);
 //
-//                    case MY_DICTIONARY_TEST -> handleMyDictionaryTest(update, chatId);
+                    case MY_DICTIONARY_TEST -> handleMyDictionaryTest(update, chatId);
 //                    case PUBLIC_DICTIONARY_TEST -> handlePublicDictionaryTest(update, chatId);
 //
 //                    case SETTINGS_MENU -> handleSettings(update, chatId);
@@ -89,6 +90,12 @@ public class UpdateHandlerService {
                 sendMenu(chatId, buttonCreatorService.mainMenuButtonCreate(), MessageConstants.MAIN_MENU_TEXT);
             }
         }
+
+
+    }
+
+    private void handleMyDictionaryTest(Update update, Long chatId) {
+
 
 
     }
@@ -193,7 +200,8 @@ public class UpdateHandlerService {
                 String text = update.getMessage().getText();
 
                 if (text.equalsIgnoreCase(ButtonMessage.DICTIONARY_LEARNING_MY_WORDS)) {
-
+                    sessionService.updateSession(chatId, UserState.MY_DICTIONARY_TEST);
+                    sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.KNOW_DONT_KNOW_MESSAGE);
                 }
                 else if (text.equalsIgnoreCase(ButtonMessage.MENU_BACK)) {
                     sessionService.updateSession(chatId, UserState.MAIN_MENU);
@@ -225,7 +233,6 @@ public class UpdateHandlerService {
                     sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
                     sendMenuTextToParseHtml(chatId, buttonCreatorService.dictionaryButtonCreate(), myWords.toString());
                 }
-
 
                 // TODO dictionry ning qolgan qismini yozish else if bilan
 

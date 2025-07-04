@@ -24,4 +24,10 @@ public interface MessageConstants {
             bemalol yod olishingiz mumkin 📖
             """;
 
+    String KNOW_DONT_KNOW_MESSAGE = """
+            Sizga ko'rsatilgan so'zlarni bilaman yoki bilmayman qilib ajrating.
+            
+            HA YOKI YO'Q
+            """;
+
 }

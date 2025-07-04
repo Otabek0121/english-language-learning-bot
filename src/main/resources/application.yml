@@ -7,7 +7,7 @@ spring:
     password: 20030121
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
   data:
     redis:
