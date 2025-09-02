@@ -13,7 +13,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
-    @Bean(name="userSession")
+    @Bean(name = "userSession")
     public RedisTemplate<String, UserSessionDTO> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, UserSessionDTO> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
@@ -22,7 +22,7 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean(name="addWordSession")
+    @Bean(name = "addWordSession")
     public RedisTemplate<String, AddWordSessionDTO> addWordSessionRedisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, AddWordSessionDTO> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
@@ -31,7 +31,7 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean(name="wordSession")
+    @Bean(name = "wordSession")
     public RedisTemplate<String, WordSessionDTO> wordSessionRedisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, WordSessionDTO> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
@@ -39,13 +39,5 @@ public class RedisConfig {
         template.setValueSerializer(new Jackson2JsonRedisSerializer<>(WordSessionDTO.class));
         return template;
     }
-
-//    @Bean
-//    public RedisMessageListenerContainer keyExpirationListener(RedisConnectionFactory factory, SessionExpirationListener listener) {
-//        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-//        container.setConnectionFactory(factory);
-//        container.addMessageListener(listener, new PatternTopic("__keyevent@0__:expired"));
-//        return container;
-//    }
 
 }

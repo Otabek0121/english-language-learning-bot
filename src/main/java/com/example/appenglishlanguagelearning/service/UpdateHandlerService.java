@@ -8,7 +8,6 @@ import com.example.appenglishlanguagelearning.payload.AddWordSessionDTO;
 import com.example.appenglishlanguagelearning.payload.UserSessionDTO;
 import com.example.appenglishlanguagelearning.repository.DictionaryRepository;
 import com.example.appenglishlanguagelearning.repository.UserRepository;
-import com.example.appenglishlanguagelearning.repository.UserSessionRepository;
 import com.example.appenglishlanguagelearning.utils.ButtonMessage;
 import com.example.appenglishlanguagelearning.utils.MessageConstants;
 import lombok.RequiredArgsConstructor;
@@ -100,38 +99,6 @@ public class UpdateHandlerService {
 
     }
 
-
-//    private void handleAddDescription(Update update, Long chatId) {
-//
-//        if (update.hasMessage()) {
-//            if (update.getMessage().hasText()) {
-//                String text = update.getMessage().getText();
-//
-//                if (text.equalsIgnoreCase(ButtonMessage.MENU_BACK)) {
-//                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
-//                    sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_MESSAGE);
-//                    return;
-//                }
-//                AddWordSessionDTO wordSession = addWordSessionService.getSession(chatId);
-//                if (Objects.isNull(wordSession)) {
-//                    sessionService.updateSession(chatId, UserState.ADD_WORD_WAIT_TRANSLATION);
-//                    sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.ENTER_WORD_TRANSLATION);
-//                    return;
-//                }
-//
-//                wordSession.setDescription(text);
-//                addWordSessionService.saveSession(wordSession);
-//
-//                sessionService.updateSession(chatId, UserState.ADD_WORD_WAIT_DESCRIPTION);
-//                sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.ENTER_WORD_TRANSLATION);
-//                return;
-//            }
-//        }
-//
-//        // TODO bu yerda xatolik haqida xabar berish textmas boshqa narsa yuborilsa userga xatolik haqida xabar berish
-//
-//    }
-
     private void handleAddTranslation(Update update, Long chatId) {
 
         if (update.hasMessage()) {
@@ -178,6 +145,13 @@ public class UpdateHandlerService {
                     sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
                     sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_MESSAGE);
                 } else {
+
+                    if(dictionaryRepository.existsByUser_ChatIdAndWordIgnoreCase(chatId,text.trim())){
+                        sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
+                        sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.EXISTS_WORD);
+                        return;
+                    }
+
                     AddWordSessionDTO addWordSessionDTO = new AddWordSessionDTO();
                     addWordSessionDTO.setWord(text);
                     addWordSessionDTO.setChatId(chatId);
@@ -218,7 +192,7 @@ public class UpdateHandlerService {
                     if (words.isEmpty()) {
                         // TODO empty bo'lsa unga so'z qo'shishi kerakligi haqida message yuborish
                         sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
-                        sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_NOT_FOUND);
+                        sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.MY_DICTIONARY_NOT_FOUND);
                         return;
                     }
 
@@ -227,14 +201,50 @@ public class UpdateHandlerService {
                     myWords.append("<b> 🧾 WORDS - SO'ZLAR 🧾 </b> \n \n");
 
                     for (int i = 0; i < words.size(); i++) {
-                        myWords.append("<b>").append((i+1)+".  ").append(words.get(i).getWord()).append(" ↔️ ").append(words.get(i).getTranslateWord()).append("</b>").append("\n\n");
+                        myWords.append("<b>").append((i+1)+".  ").append(words.get(i).getWord()).append(" ☞☞ ").append(words.get(i).getTranslateWord()).append("</b>").append("\n\n");
                     }
 
                     sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
                     sendMenuTextToParseHtml(chatId, buttonCreatorService.dictionaryButtonCreate(), myWords.toString());
                 }
+                else if(text.equalsIgnoreCase(ButtonMessage.DICTIONARY_PUBLIC_WORDS)){
 
-                // TODO dictionry ning qolgan qismini yozish else if bilan
+                    List<Dictionary> dictionaries = dictionaryRepository.findAllByUserIsNull();
+
+                    if (dictionaries.isEmpty()) {
+                        /// Note : dictionary bo'sh bo'lsa unda bo'shligi haqida message yuborish
+                        sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
+                        sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_NOT_FOUND);
+                        return;
+                    }
+
+                    // TODO bo'sh bo'lmasa so'zlarrni hammasini userga ko'rsatish quyidagi ko'rinishda   hello <-> salom kabi
+                    StringBuilder myWords=new StringBuilder();
+                    myWords.append("<b> 🧾 WORDS - SO'ZLAR 🧾 </b> \n \n");
+
+                    for (int i = 0; i < dictionaries.size(); i++) {
+                        myWords.append("<b>").append((i+1)+".  ").append(dictionaries.get(i).getWord()).append(" ☞☞ ").append(dictionaries.get(i).getTranslateWord()).append("</b>").append("\n");
+                    }
+
+                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
+                    sendMenuTextToParseHtml(chatId, buttonCreatorService.dictionaryButtonCreate(), myWords.toString());
+
+                }
+                else if(text.equalsIgnoreCase(ButtonMessage.DICTIONARY_SEARCH_WORD)){
+
+                    // TODO bu yerda so'z tarjimasini qilish uchun API ulash kerak.
+
+                }
+                else if(text.equalsIgnoreCase(ButtonMessage.DICTIONARY_LEARNING_PUBLIC_WORDS)){
+
+                    // TODO bu yerda public words dan so'z yod olish logic qismini qilish
+
+                }
+                else {
+                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
+                    sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_MESSAGE);
+                }
+
 
             }
 

@@ -18,10 +18,13 @@ public interface MessageConstants {
 
     String WORD_CREATE="So'z muvffaqiyatli saqlandi 🎉";
 
-    String DICTIONARY_NOT_FOUND = """
-            Sizdaa hali lug'at mavjud emas. 
+    String MY_DICTIONARY_NOT_FOUND = """
+            Sizda hali lug'at mavjud emas. 
             O'zingiz uchun lug'at qo'shib olib, 
             bemalol yod olishingiz mumkin 📖
+            """;
+    String DICTIONARY_NOT_FOUND = """
+            Umumiy lug'atda hali so'z mavjud emas 📖
             """;
 
     String KNOW_DONT_KNOW_MESSAGE = """
@@ -29,5 +32,7 @@ public interface MessageConstants {
             
             HA YOKI YO'Q
             """;
+
+    String EXISTS_WORD= "Bunday so'z sizning lug'atingizda mavjud❕";
 
 }

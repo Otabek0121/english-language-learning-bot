@@ -18,9 +18,12 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_word_progress")
-@SQLDelete(sql = "UPDATE user_session SET deleted=true WHERE id=?")
+@SQLDelete(sql = "UPDATE user_word_progress SET deleted=true WHERE id=?")
 @SQLRestriction("deleted = false")
+@Table(
+        name = "user_word_progress",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"userId", "wordId"})
+)
 public class UserWordProgress {
 
     @Id
