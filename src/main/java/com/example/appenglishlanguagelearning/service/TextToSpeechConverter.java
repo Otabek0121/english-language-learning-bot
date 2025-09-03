@@ -18,7 +18,7 @@ public class TextToSpeechConverter {
 
     private void sendTextToAudio(String messageText, long chatId) {
 
-        String audioFilePath = convertTextToSpeech(messageText);
+        String audioFilePath = convertTextToSpeech(messageText,chatId);
         if (audioFilePath != null) {
             botSender.sendAudio(chatId, audioFilePath);
         } else {
@@ -29,7 +29,7 @@ public class TextToSpeechConverter {
         }
     }
 
-    private String convertTextToSpeech(String text) {
+    private String convertTextToSpeech(String text,long chatId) {
         try {
             VoiceProvider tts = new VoiceProvider(VOICERSS_API_KEY);
             VoiceParameters params = new VoiceParameters(text, Languages.English_UnitedStates);
@@ -41,7 +41,7 @@ public class TextToSpeechConverter {
 
             byte[] voice = tts.speech(params);
 
-            String filePath = "C:\\Users\\User\\Desktop\\bot_audio\\"+text+"-"+ UUID.randomUUID()+".mp3";
+            String filePath = "C:\\Users\\User\\Desktop\\bot_audio\\"+text+"_"+chatId+"_"+ UUID.randomUUID()+".mp3";
             FileOutputStream fos = new FileOutputStream(filePath);
             fos.write(voice, 0, voice.length);
             fos.flush();

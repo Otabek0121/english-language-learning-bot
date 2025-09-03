@@ -16,6 +16,8 @@ import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -95,7 +97,17 @@ public class UpdateHandlerService {
 
     private void handleMyDictionaryTest(Update update, Long chatId) {
 
+        if (update.hasMessage()) {
+            if (update.getMessage().hasText()) {
+                String state = update.getMessage().getText();
+                if (state.equalsIgnoreCase(ButtonMessage.MENU_BACK)) {
+                    sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);
+                    sendMenu(chatId, buttonCreatorService.dictionaryButtonCreate(), MessageConstants.DICTIONARY_MESSAGE);
+                    return;
+                }
 
+            }
+        }
 
     }
 
@@ -174,7 +186,7 @@ public class UpdateHandlerService {
                 String text = update.getMessage().getText();
 
                 if (text.equalsIgnoreCase(ButtonMessage.DICTIONARY_LEARNING_MY_WORDS)) {
-                    sessionService.updateSession(chatId, UserState.MY_DICTIONARY_TEST);
+                    sessionService.updateSession(chatId, UserState.MY_DICTIONARY_TEST, "MY_WORDS");
                     sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.KNOW_DONT_KNOW_MESSAGE);
                 }
                 else if (text.equalsIgnoreCase(ButtonMessage.MENU_BACK)) {
@@ -236,9 +248,8 @@ public class UpdateHandlerService {
 
                 }
                 else if(text.equalsIgnoreCase(ButtonMessage.DICTIONARY_LEARNING_PUBLIC_WORDS)){
-
-                    // TODO bu yerda public words dan so'z yod olish logic qismini qilish
-
+                    sessionService.updateSession(chatId, UserState.MY_DICTIONARY_TEST, "PUBLIC_WORDS");
+                    sendMenu(chatId, buttonCreatorService.backMenuButtonCreate(), MessageConstants.KNOW_DONT_KNOW_MESSAGE);
                 }
                 else {
                     sessionService.updateSession(chatId, UserState.DICTIONARY_MENU);

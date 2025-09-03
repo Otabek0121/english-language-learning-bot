@@ -16,4 +16,7 @@ public class UserSessionDTO {
 
     private UserState userState;
 
+    private String learningWord; /// Note : USer o'zini so'zlaridan yodlayaptimi yoki umumiydanmi shu
+                                 /// stateni saqlash uchun kerak (MY_WORDS yoki PUBLIC_WORDS)
+
 }

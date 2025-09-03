@@ -36,6 +36,8 @@ public class UserWordProgress {
     private int knowCount;
     private LocalDateTime lastSeen;
 
+    private LocalDateTime showDate;
+
     @Enumerated(EnumType.STRING)
     private DictionaryStatusEnum status;
 

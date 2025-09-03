@@ -32,13 +32,13 @@ public class SessionService {
 
         UserSession entity = sessionRepository.findByChatId(chatId).orElse(null);
         if (entity != null) {
-            session = new UserSessionDTO(entity.getChatId(), entity.getUserState());
+            session = new UserSessionDTO(entity.getChatId(), entity.getUserState(),null);
         } else {
 
             UserSession sessionEntity=new UserSession(chatId,UserState.SEND_PHONE_NUMBER);
             sessionRepository.save(sessionEntity);
 
-            session = new UserSessionDTO(chatId, UserState.SEND_PHONE_NUMBER);
+            session = new UserSessionDTO(chatId, UserState.SEND_PHONE_NUMBER,null);
         }
 
         ops.set(key, session, TTL_MINUTES, TimeUnit.MINUTES);
@@ -47,7 +47,17 @@ public class SessionService {
 
     public void updateSession(Long chatId, UserState state) {
         String key = chatId.toString();
-        UserSessionDTO session = new UserSessionDTO(chatId, state);
+        UserSessionDTO session = new UserSessionDTO(chatId, state,null);
+
+        redisTemplate.opsForValue().set(key, session, TTL_MINUTES, TimeUnit.MINUTES);
+
+        saveOrUpdateSessionInDb(chatId, state);
+
+    }
+
+    public void updateSession(Long chatId, UserState state,String learningWord) {
+        String key = chatId.toString();
+        UserSessionDTO session = new UserSessionDTO(chatId, state, learningWord);
 
         redisTemplate.opsForValue().set(key, session, TTL_MINUTES, TimeUnit.MINUTES);
 
